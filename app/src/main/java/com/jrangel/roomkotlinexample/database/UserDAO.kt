@@ -6,8 +6,8 @@ import com.jrangel.roomkotlinexample.entity.User
 @Dao
 interface UserDAO {
 
-    @Query("SELECT * FROM user_table")
-    fun getAlphabetizedWords(): List<User>
+    @Query("SELECT * FROM user_table ORDER BY id DESC")
+    fun getAll(): List<User>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(user: User)
