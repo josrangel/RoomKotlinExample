@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/item_iv_element"
         android:layout_width="50sp"
         android:layout_height="50sp"
         android:layout_margin="5sp"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="5sp"
         android:text="@string/txt_first_name"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/item_iv_element"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:text="@string/txt_last_name"
         android:layout_margin="5sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/item_iv_element"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
@@ -38,16 +38,16 @@
         android:layout_margin="5sp"
         android:text="@string/txt_age"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/item_iv_element"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/item_tv_first_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:layout_margin="5sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="TextView"
+        app:layout_constraintEnd_toStartOf="@+id/item_im_delete"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,9 +55,9 @@
         android:id="@+id/item_tv_last_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:layout_margin="5sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="TextView"
+        app:layout_constraintEnd_toStartOf="@+id/item_im_delete"
         app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/item_tv_first_name" />
 
@@ -68,7 +68,17 @@
         android:layout_margin="5sp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/item_im_delete"
         app:layout_constraintStart_toEndOf="@+id/textView3"
         app:layout_constraintTop_toBottomOf="@+id/item_tv_last_name" />
+
+    <ImageView
+        android:id="@+id/item_im_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="10sp"
+        android:padding="5sp"
+        android:src="@drawable/ic_baseline_delete_forever_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>
