@@ -8,8 +8,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.jrangel.roomkotlinexample.R
 import com.jrangel.roomkotlinexample.entity.User
+import com.jrangel.roomkotlinexample.listeners.OnDeleteListener
 
-class UserAdapter(private val mList: List<User>) : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
+class UserAdapter(
+    private val mList: List<User>,
+    private val view: OnDeleteListener
+) : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
     // create new views
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,6 +34,9 @@ class UserAdapter(private val mList: List<User>) : RecyclerView.Adapter<UserAdap
         holder.tvFirstName.text = ItemsViewModel.firstName
         holder.tvLastName.text = ItemsViewModel.lastName
         holder.tvAge.text = ItemsViewModel.age.toString()
+        holder.imDelete.setOnClickListener(View.OnClickListener {
+            view.deleteElement(ItemsViewModel, position)
+        })
     }
 
     // return the number of the items in the list
@@ -39,9 +46,10 @@ class UserAdapter(private val mList: List<User>) : RecyclerView.Adapter<UserAdap
 
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
-        val ivPerson: ImageView = itemView.findViewById(R.id.imageView)
+        val ivPerson: ImageView = itemView.findViewById(R.id.item_iv_element)
         val tvFirstName: TextView = itemView.findViewById(R.id.item_tv_first_name)
         val tvLastName: TextView = itemView.findViewById(R.id.item_tv_last_name)
         val tvAge: TextView = itemView.findViewById(R.id.item_tv_age)
+        val imDelete: ImageView = itemView.findViewById(R.id.item_im_delete)
     }
 }
