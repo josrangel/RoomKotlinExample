@@ -10,6 +10,7 @@ import com.jrangel.roomkotlinexample.adapter.UserAdapter
 import com.jrangel.roomkotlinexample.database.DatabaseRoom
 import com.jrangel.roomkotlinexample.database.UserRepository
 import com.jrangel.roomkotlinexample.entity.User
+import com.jrangel.roomkotlinexample.listeners.OnDeleteListener
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -23,7 +24,7 @@ import org.jetbrains.anko.uiThread
  * https://github.com/Kotlin/anko
  */
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnDeleteListener {
 
     lateinit var etFirstName: EditText
     lateinit var etLastName: EditText
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         val linearLayoutManager = LinearLayoutManager(this)
         rvUser.layoutManager = linearLayoutManager
-        userAdapter = UserAdapter(dataRV)
+        userAdapter = UserAdapter(dataRV, this)
         // Setting the Adapter with the recyclerview
         rvUser.adapter = userAdapter
 
@@ -70,6 +71,10 @@ class MainActivity : AppCompatActivity() {
         rvUser.scrollToPosition(0)
     }
 
+    private fun notifyDeleteUser(position: Int) {
+        userAdapter.notifyItemRemoved(position)
+    }
+
     fun addNewUser(view: View) {
         val user = User()
         user.firstName = etFirstName.text.toString()
@@ -80,6 +85,16 @@ class MainActivity : AppCompatActivity() {
             dataRV.add(0, user)
             uiThread {
                 notifyNewUser()
+            }
+        }
+    }
+
+    override fun deleteElement(user: User, position: Int) {
+        doAsync {
+            db.userDao().delete(user)
+            dataRV.remove(user)
+            uiThread {
+                notifyDeleteUser(position)
             }
         }
     }
