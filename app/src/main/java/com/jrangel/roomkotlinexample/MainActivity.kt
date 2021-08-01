@@ -68,11 +68,13 @@ class MainActivity : AppCompatActivity(), OnDeleteListener {
 
     private fun notifyNewUser() {
         userAdapter.notifyItemInserted(0)
+        userAdapter.notifyItemRangeChanged(0, userAdapter.itemCount);
         rvUser.scrollToPosition(0)
     }
 
     private fun notifyDeleteUser(position: Int) {
         userAdapter.notifyItemRemoved(position)
+        userAdapter.notifyItemRangeChanged(position, userAdapter.itemCount);
     }
 
     fun addNewUser(view: View) {
