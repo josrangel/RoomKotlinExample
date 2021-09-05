@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.jrangel.roomkotlinexample.MainActivity
 import com.jrangel.roomkotlinexample.R
 import com.jrangel.roomkotlinexample.entity.User
-import com.jrangel.roomkotlinexample.listeners.OnDeleteListener
 
 class UserAdapter(
     private val mList: List<User>,
-    private val view: OnDeleteListener
+    private val view: MainActivity
 ) : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
     // create new views
@@ -37,6 +37,16 @@ class UserAdapter(
         holder.imDelete.setOnClickListener(View.OnClickListener {
             view.deleteElement(ItemsViewModel, position)
         })
+
+        holder.itemView.setOnClickListener {
+            view.openUpdateActivity(
+                ItemsViewModel.id,
+                ItemsViewModel.firstName,
+                ItemsViewModel.lastName,
+                ItemsViewModel.age,
+                position
+            )
+        }
     }
 
     // return the number of the items in the list
