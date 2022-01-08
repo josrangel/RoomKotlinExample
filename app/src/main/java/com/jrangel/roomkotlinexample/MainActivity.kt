@@ -2,6 +2,7 @@ package com.jrangel.roomkotlinexample
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import androidx.activity.result.ActivityResultLauncher
@@ -15,17 +16,19 @@ import com.jrangel.roomkotlinexample.database.UserRepository
 import com.jrangel.roomkotlinexample.entity.User
 import com.jrangel.roomkotlinexample.listeners.OnDeleteListener
 import com.jrangel.roomkotlinexample.listeners.OnSelectListener
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
- * Tutoriales
+ * Source
  *
  * Room
  * https://developer.android.com/codelabs/android-room-with-a-view-kotlin?hl=es-419
+ * https://developer.android.com/jetpack/androidx/releases/room
  *
- * Anko
- * https://github.com/Kotlin/anko
+ * RxJava
+ * https://medium.com/@gabrieldemattosleon/fundamentals-of-rxjava-with-kotlin-for-absolute-beginners-3d811350b701
+ * https://medium.com/@volodya.vechirko/android-repository-implementation-rxjava2-room-retrofit-59dbd4b238c4
  */
 
 class MainActivity : AppCompatActivity(), OnDeleteListener, OnSelectListener {
@@ -85,12 +88,14 @@ class MainActivity : AppCompatActivity(), OnDeleteListener, OnSelectListener {
     }
 
     private fun chargeUsers() {
-        doAsync {
-            dataRV = db.userDao().getAll() as ArrayList<User>
-            uiThread {
-                initRecyclerView()
+        db.userDao().getAll()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe() { list ->
+                    dataRV = list as ArrayList<User>
+                    initRecyclerView()
             }
-        }
+        Log.i("ERROR","prueba error");
     }
 
     private fun notifyNewUser() {
@@ -114,33 +119,29 @@ class MainActivity : AppCompatActivity(), OnDeleteListener, OnSelectListener {
         user.firstName = etFirstName.text.toString()
         user.lastName = etLastName.text.toString()
         user.age = etAge.text.toString().toInt()
-        doAsync {
-            db.userDao().insert(user)
-            dataRV.add(0, user)
-            uiThread {
-                notifyNewUser()
-            }
-        }
+        dataRV.add(0, user)
+
+        db.userDao().insert(user)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(){ notifyNewUser() }
     }
 
     override fun deleteElement(user: User, position: Int) {
-        doAsync {
-            db.userDao().delete(user)
-            dataRV.remove(user)
-            uiThread {
-                notifyDeleteUser(position)
-            }
-        }
+        dataRV.remove(user)
+        db.userDao().delete(user)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(){ notifyDeleteUser(position) }
     }
 
     private fun updateUser(user: User, position: Int) {
-        doAsync {
-            db.userDao().update(user)
-            dataRV[position] = user
-            uiThread {
-                notifyChangeUser(position)
-            }
-        }
+        dataRV[position] = user
+
+        db.userDao().update(user)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(){ notifyChangeUser(position) }
     }
 
     override fun openUpdateActivity(
