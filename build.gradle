@@ -28,5 +28,4 @@ task clean(type: Delete) {
 
 ext {
     roomVersion = '2.2.5'
-    anko_version = '0.10.8'
 }
